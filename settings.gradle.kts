@@ -1,1 +1,1 @@
-rootProject.name = "twitch-bot"
+rootProject.name = "t-bot-kotlin-template"
