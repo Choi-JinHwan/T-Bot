@@ -1,4 +1,5 @@
 twitch:
   client-id: none
   client-secret: none
+  access-token: none
   redirect-url: none
