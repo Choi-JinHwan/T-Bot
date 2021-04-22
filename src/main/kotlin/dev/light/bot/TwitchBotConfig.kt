@@ -2,9 +2,11 @@ package dev.light.bot
 
 import com.github.philippheuer.credentialmanager.CredentialManager
 import com.github.philippheuer.credentialmanager.CredentialManagerBuilder
+import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider
+import com.github.twitch4j.chat.TwitchChat
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -12,23 +14,39 @@ import org.springframework.context.annotation.Configuration
 class TwitchBotConfig {
 
     @Bean
-    fun twitchClient(credentialManager: CredentialManager): TwitchClient = TwitchClientBuilder.builder()
-        .withEnableChat(true)
-        .withCredentialManager(credentialManager)
-        .build()
+    fun defaultCredential(twitchProperty: TwitchProperty): OAuth2Credential =
+        OAuth2Credential("twitch", twitchProperty.accessToken)
 
     @Bean
-    fun twitchChatClient(twitchClient: TwitchClient) = twitchClient.chat
+    fun twitchClient(
+        credentialManager: CredentialManager,
+        defaultCredential: OAuth2Credential,
+        twitchProperty: TwitchProperty
+    ): TwitchClient =
+        TwitchClientBuilder.builder()
+            .withCredentialManager(credentialManager)
+            .withEnableChat(true)
+            .withChatAccount(defaultCredential)
+            .build()
 
     @Bean
-    fun credentialManager(twitchProperty: TwitchProperty) = CredentialManagerBuilder.builder().build().also {
-        it.registerIdentityProvider(
-            TwitchIdentityProvider(
-                twitchProperty.clientId,
-                twitchProperty.clientSecret,
-                twitchProperty.redirectUrl
-            )
+    fun twitchChatClient(twitchClient: TwitchClient): TwitchChat = twitchClient.chat
+
+    @Bean
+    fun credentialManager(twitchProperty: TwitchProperty, defaultCredential: OAuth2Credential): CredentialManager {
+        val credentialManager = CredentialManagerBuilder.builder().build()
+        val identityProvider = TwitchIdentityProvider(
+            twitchProperty.clientId,
+            twitchProperty.clientSecret,
+            twitchProperty.redirectUrl
         )
+
+        credentialManager.also {
+            it.addCredential("twitch", defaultCredential)
+            it.registerIdentityProvider(identityProvider)
+        }
+
+        return credentialManager
     }
 
 }
