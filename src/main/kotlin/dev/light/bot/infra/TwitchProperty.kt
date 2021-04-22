@@ -1,4 +1,4 @@
-package dev.light.bot
+package dev.light.bot.infra
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

@@ -1,4 +1,4 @@
-package dev.light.bot
+package dev.light.bot.infra.twitch4j
 
 import com.github.philippheuer.credentialmanager.CredentialManager
 import com.github.philippheuer.credentialmanager.CredentialManagerBuilder
@@ -7,6 +7,7 @@ import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider
 import com.github.twitch4j.chat.TwitchChat
+import dev.light.bot.infra.TwitchProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

@@ -1,8 +1,7 @@
-package dev.light.bot
+package dev.light.bot.infra.twitch4j
 
 import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent
-import dev.light.bot.event.TwitchUserChatEvent
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
@@ -46,23 +45,5 @@ class TwitchChatEventPublisher(
 
 }
 
-fun IRCMessageEvent.toApplicationEvent(): ApplicationEvent {
-    if (isUserChat()) {
-        return toUserChatEvent()
-    }
-
-    return SimpleIRCMessageApplicationEvent(this)
-}
-
 data class SimpleIRCMessageApplicationEvent(val event: IRCMessageEvent) : ApplicationEvent(event)
 
-fun IRCMessageEvent.isUserChat() =
-    commandType.equals("PRIVMSG") && !OtherTwitchBot.isBotUserId(userId)
-
-fun IRCMessageEvent.toUserChatEvent(): TwitchUserChatEvent = TwitchUserChatEvent(
-    channelId = channelId,
-    channelName = channelName.orElse(""),
-    userId = channelId,
-    userName = userName,
-    message = message.orElse("")
-)

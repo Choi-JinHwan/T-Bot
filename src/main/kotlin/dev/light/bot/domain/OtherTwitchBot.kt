@@ -1,4 +1,4 @@
-package dev.light.bot
+package dev.light.bot.domain
 
 enum class OtherTwitchBot(val userId: String) {
     NIGHT_BOT("83257026"),

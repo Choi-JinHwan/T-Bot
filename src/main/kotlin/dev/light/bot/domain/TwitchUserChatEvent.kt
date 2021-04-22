@@ -1,4 +1,4 @@
-package dev.light.bot.event
+package dev.light.bot.domain
 
 import org.springframework.context.ApplicationEvent
 
