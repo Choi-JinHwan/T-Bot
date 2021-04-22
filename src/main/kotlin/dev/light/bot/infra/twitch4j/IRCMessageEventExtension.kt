@@ -5,12 +5,12 @@ import dev.light.bot.domain.OtherTwitchBot
 import dev.light.bot.domain.TwitchUserChatEvent
 import org.springframework.context.ApplicationEvent
 
-fun IRCMessageEvent.toApplicationEvent(): ApplicationEvent {
+fun IRCMessageEvent.toApplicationEvent(): ApplicationEvent? {
     if (isUserChat()) {
         return toUserChatEvent()
     }
 
-    return SimpleIRCMessageApplicationEvent(this)
+    return null
 }
 
 fun IRCMessageEvent.isUserChat() =

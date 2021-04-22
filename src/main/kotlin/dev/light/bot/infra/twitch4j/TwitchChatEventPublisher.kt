@@ -2,7 +2,6 @@ package dev.light.bot.infra.twitch4j
 
 import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent
-import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import javax.annotation.PreDestroy
@@ -19,8 +18,10 @@ class TwitchChatEventPublisher(
     init {
         joinChannels("sah_yang")
 
-        twitchChatClient.eventManager.onEvent(IRCMessageEvent::class.java) { event ->
-            eventPublisher.publishEvent(event.toApplicationEvent())
+        twitchChatClient.eventManager.onEvent(IRCMessageEvent::class.java) { rawEvent ->
+            rawEvent.toApplicationEvent()?.run {
+                eventPublisher.publishEvent(this)
+            }
         }
 
     }
@@ -44,6 +45,4 @@ class TwitchChatEventPublisher(
     }
 
 }
-
-data class SimpleIRCMessageApplicationEvent(val event: IRCMessageEvent) : ApplicationEvent(event)
 
