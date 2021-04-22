@@ -21,8 +21,7 @@ class TwitchBotConfig {
     @Bean
     fun twitchClient(
         credentialManager: CredentialManager,
-        defaultCredential: OAuth2Credential,
-        twitchProperty: TwitchProperty
+        defaultCredential: OAuth2Credential
     ): TwitchClient =
         TwitchClientBuilder.builder()
             .withCredentialManager(credentialManager)
@@ -34,7 +33,7 @@ class TwitchBotConfig {
     fun twitchChatClient(twitchClient: TwitchClient): TwitchChat = twitchClient.chat
 
     @Bean
-    fun credentialManager(twitchProperty: TwitchProperty, defaultCredential: OAuth2Credential): CredentialManager {
+    fun credentialManager(twitchProperty: TwitchProperty): CredentialManager {
         val credentialManager = CredentialManagerBuilder.builder().build()
         val identityProvider = TwitchIdentityProvider(
             twitchProperty.clientId,
@@ -43,7 +42,6 @@ class TwitchBotConfig {
         )
 
         credentialManager.also {
-            it.addCredential("twitch", defaultCredential)
             it.registerIdentityProvider(identityProvider)
         }
 
