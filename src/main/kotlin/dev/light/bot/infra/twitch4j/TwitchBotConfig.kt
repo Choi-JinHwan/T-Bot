@@ -5,7 +5,6 @@ import com.github.philippheuer.credentialmanager.CredentialManagerBuilder
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
-import com.github.twitch4j.auth.providers.TwitchIdentityProvider
 import com.github.twitch4j.chat.TwitchChat
 import dev.light.bot.infra.TwitchProperty
 import org.springframework.context.annotation.Bean
@@ -33,19 +32,7 @@ class TwitchBotConfig {
     fun twitchChatClient(twitchClient: TwitchClient): TwitchChat = twitchClient.chat
 
     @Bean
-    fun credentialManager(twitchProperty: TwitchProperty): CredentialManager {
-        val credentialManager = CredentialManagerBuilder.builder().build()
-        val identityProvider = TwitchIdentityProvider(
-            twitchProperty.clientId,
-            twitchProperty.clientSecret,
-            twitchProperty.redirectUrl
-        )
-
-        credentialManager.also {
-            it.registerIdentityProvider(identityProvider)
-        }
-
-        return credentialManager
-    }
+    fun credentialManager(twitchProperty: TwitchProperty): CredentialManager =
+        CredentialManagerBuilder.builder().build()
 
 }
